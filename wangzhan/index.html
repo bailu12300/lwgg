@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lwgg</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --bg-color: #ecf0f1;
+            --text-color: #34495e;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        #profile-img {
+            width: 150px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        #profile-img:hover {
+            transform: scale(1.1);
+        }
+        h1 {
+            margin-top: 20px;
+            font-size: 2.5em;
+        }
+        section {
+            background: white;
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        #skills ul {
+            display: flex;
+            flex-wrap: wrap;
+            list-style-type: none;
+            padding: 0;
+        }
+        #skills li {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 20px;
+            transition: background-color 0.3s;
+        }
+        #skills li:hover {
+            background-color: var(--secondary-color);
+        }
+        #projects .project {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        #projects .project:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        #contact form {
+            display: grid;
+            gap: 20px;
+        }
+        #contact input, #contact textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #contact button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #contact button:hover {
+            background-color: var(--secondary-color);
+        }
+        footer {
+            background-color: var(--text-color);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        /* 新增音乐播放器样式 */
+        #music-player {
+            position: fixed;
+            left: -200px; /* 默认隐藏大部分 */
+            top: 66.67vh; /* 屏幕高度的 2/3 处 */
+            transform: translateY(-50%); /* 向上移动自身高度的一半，以居中对齐 */
+            background-color: rgba(52, 152, 219, 0.8);
+            padding: 10px;
+            border-radius: 0 5px 5px 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            transition: left 0.3s ease;
+            width: 250px; /* 设置固定宽度 */
+        }
+        #music-player:hover {
+            left: 0; /* 鼠标悬停时完全显示 */
+        }
+        #music-player audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+        #music-title {
+            color: white;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+        #music-tip {
+            background-color: rgba(52, 152, 219, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.8em;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            white-space: nowrap;
+        }
+
+        /* 添加社交链接样式 */
+        .social-links {
+            margin-top: 20px;
+        }
+        .social-links a {
+            color: white;
+            font-size: 24px;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* 图片轮播样式 */
+        #image-carousel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 250px;  /* 增加宽度 */
+            height: 200px; /* 增加高度 */
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        #image-carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        #image-carousel img.active {
+            opacity: 1;
+        }
+
+        .project-details {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .project-details img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .project-details .bottom-image {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .project-details .bottom-image img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* 添加页眉样式 */
+        .top-header {
+            background-color: var(--primary-color);
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .top-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .top-header a:hover {
+            color: var(--secondary-color);
+        }
+        .folder-link {
+            display: flex;
+            align-items: center;
+        }
+        .folder-link i {
+            margin-right: 5px;
+        }
+
+        #projects-container {
+            height: 400px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+        .project {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .project-summary {
+            max-height: 150px;
+            overflow: hidden;
+            position: relative;
+        }
+        .project-summary.expanded {
+            max-height: none;
+        }
+        .read-more {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(to right, transparent, white 50%);
+            padding: 5px 10px;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+        .project-full {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 新增页眉 -->
+    <header class="top-header">
+        <div class="container">
+            <a href="#" class="logo">lwgg的个人网站</a>
+            <a href="#" class="folder-link" id="zahuopu-link">
+                <i class="fas fa-folder"></i> 杂货铺
+            </a>
+        </div>
+    </header>
+
+    <!-- 原有的 header 现在变成 main-header -->
+    <header class="main-header">
+        <img src="yyue/微信截图_20240918070122.png" alt="头像" id="profile-img">
+        <h1>lwgg</h1>
+        <p>Web开发者 | UI设计师 | 摄影爱好者</p>
+        <!-- 社交媒体链接 -->
+        <div class="social-links">
+            <a href="https://github.com/lwgg" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://linkedin.com/in/lwgg" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://twitter.com/lwgg" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com/lwgg" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="mailto:lwgg@example.com" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="about">
+            <h2>关于我</h2>
+            <p>你好！我是lwgg，一名充满激情的Web开发者。我热爱创造直观、动态的用户界面，并且总是渴望学习新技术。在工作之余，我喜欢摄影，捕捉生活中的美好瞬间。</p>
+        </section>
+
+        <section id="skills">
+            <h2>技能</h2>
+            <ul>
+                <li>HTML5</li>
+                <li>CSS3</li>
+                <li>JavaScript</li>
+                <li>React</li>
+                <li>Node.js</li>
+                <li>UI/UX设计</li>
+                <li>摄影</li>
+            </ul>
+        </section>
+
+        <section id="projects">
+            <h2>项目展示</h2>
+            <div id="projects-container">
+                <div class="project">
+                    <h3>个人博客系统</h3>
+                    <div class="project-summary">
+                        <p>使用React和Node.js开发的全栈博客应用，支持Markdown编辑和实时预览。该系统具有用户认证、文章管理、评论系统等功能。前端使用React hooks和Context API进行状态管理，后端采用Express框架，数据存储使用MongoDB。项目还集成了代码高亮、图片上传等功能，提供了良好的写作和阅读体验。</p>
+                        <span class="read-more">阅读更多</span>
+                    </div>
+                    <div class="project-full">
+                        <p>使用React和Node.js开发的全栈博客应用，支持Markdown编辑和实时预览。该系统具有用户认证、文章管理、评论系统等功能。前端使用React hooks和Context API进行状态管理，后端采用Express框架，数据存储使用MongoDB。项目还集成了代码高亮、图片上传等功能，提供了良好的写作和阅读体验。此外，博客系统还实现了响应式设计，确保在各种设备上都能有良好的显示效果。为了提高性能，使用了服务器端渲染（SSR）技术，并实现了文章的分类和标签功能，方便用户快速查找感兴趣的内容。</p>
+                    </div>
+                </div>
+                <div class="project">
+                    <h3>在线相册</h3>
+                    <div class="project-summary">
+                        <p>基于Vue.js的响应式相册网站，集成了图片上传、滤镜和分享功能。用户可以创建多个相册，为每张照片添加描述和标签。网站采用瀑布流布局，提供流畅的浏览体验。图片处理使用Canvas API实现实时滤镜效果，支持亮度、对比度、饱和度等调整。</p>
+                        <span class="read-more">阅读更多</span>
+                    </div>
+                    <div class="project-full">
+                        <p>基于Vue.js的响应式相册网站，集成了图片上传、滤镜和分享功能。用户可以创建多个相册，为每张照片添加描述和标签。网站采用瀑布流布局，提供流畅的浏览体验。图片处理使用Canvas API实现实时滤镜效果，支持亮度、对比度、饱和度等调整。此外，相册还支持社交分享功能，用户可以轻松将自己的照片分享到各大社交平台。为了提高加载速度，实现了图片懒加载和渐进式加载。后端使用Node.js和Express，结合AWS S3进行图片存储，确保了高可用性和快速的访问速度。</p>
+                    </div>
+                </div>
+                <div class="project">
+                    <h3>电机工作原理展示页面</h3>
+                    <div class="project-summary">
+                        <p>一个展示直流电机和交流电机工作原理的HTML页面。包含详细解释和示意图。该页面使用HTML5和CSS3技术，结合SVG动画来直观展示电机的工作过程。页面分为直流电机和交流电机两个主要部分，每部分都包含原理说明、结构图解和动态演示。</p>
+                        <span class="read-more">阅读更多</span>
+                    </div>
+                    <div class="project-full">
+                        <p>一个展示直流电机和交流电机工作原理的HTML页面。包含详细解释和示意图。该页面使用HTML5和CSS3技术，结合SVG动画来直观展示电机的工作过程。页面分为直流电机和交流电机两个主要部分，每部分都包含原理说明、结构图解和动态演示。用户可以通过交互式控件调整电机的工作参数，实时观察电机运行状态的变化。页面还集成了响应式设计，确保在不同设备上都能正常显示。为了增强教育效果，还添加了小测验和问答环节，帮助用户巩固所学知识。</p>
+                        <div class="project-details">
+                            <h4>电机工作原理</h4>
+                            <p>电机是一种将电能转化为机械能的设备，广泛应用于现代工业和生活中。下面介绍直流电机和交流电机的基本工作原理。</p>
+                            
+                            <h5>1. 直流电机（DC Motor）原理</h5>
+                            <p>直流电机利用直流电源，通过定子产生的磁场和转子线圈中的电流相互作用，产生转矩使转子旋转。</p>
+                            <ul>
+                                <li><strong>定子：</strong>固定部分，通常是永久磁铁或产生磁场的电磁铁。</li>
+                                <li><strong>转子：</strong>可旋转的线圈部分，通电后与磁场产生相互作用。</li>
+                                <li><strong>电刷和换向器：</strong>确保电流方向在转子转动时不断切换，以维持转矩方向一致。</li>
+                            </ul>
+                            <p>其工作原理基于电磁感应定律，即当电流通过线圈时，线圈周围会产生磁场，磁场和定子的磁场相互作用，使转子旋转。</p>
+                            <img src="dc_motor_diagram.png" alt="直流电机工作原理示意图">
+
+                            <h5>2. 交流电机（AC Motor）原理</h5>
+                            <p>交流电机通过使用交流电源来工作。交流电机通常分为同步电机和异步电机。</p>
+                            <ul>
+                                <li><strong>定子：</strong>产生旋转磁场的部分，通过三相交流电提供磁场。</li>
+                                <li><strong>转子：</strong>在定子产生的旋转磁场作用下转动，常见的是笼式转子或绕线转子。</li>
+                            </ul>
+                            <p>当交流电流通过定子绕组时，定子产生一个旋转磁场，该磁场与转子中的感应电流相互作用，进而产生转矩，驱动转子旋转。</p>
+                            <img src="ac_motor_diagram.png" alt="交流电机工作原理示意图">
+
+                            <!-- 在最底部添加新图片 -->
+                            <div class="bottom-image">
+                                <img src="yyue/imp/a17e798f-6bec-4281-a074-7f11a390bcd1 (1).webp" alt="电机工作原理补充图片">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>联系我</h2>
+            <form id="contact-form">
+                <input type="text" placeholder="您的姓名" required>
+                <input type="email" placeholder="您的邮箱" required>
+                <textarea placeholder="您的留言" rows="4" required></textarea>
+                <button type="submit">发送留言</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- 在 footer 之前添加音乐播放器 -->
+    <div id="music-player">
+        <div id="music-tip">音乐播放器 - 悬停展开</div>
+        <div id="music-title">正在播放: obj_wo3DlMOGwrbDjj7DisKw</div>
+        <audio controls loop>
+            <source src="obj_wo3DlMOGwrbDjj7DisKw_28481682270_c071_3672_d103_f50b08cb9f224109a61a8e62fa4d0503.mp3" type="audio/mpeg">
+            您的浏览器不支持音频元素。
+        </audio>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 lwgg的个人网站 | 保留所有权利</p>
+    </footer>
+
+    <div id="image-carousel">
+        <img src="微信截图_20240918070122.png" alt="图片1" class="active">
+        <img src="微信截图_20240919071420.png" alt="图片2">
+    </div>
+
+    <!-- 这里放置杂货铺的内容 -->
+    <div id="zahuopu-content" style="display: none;">
+        <h2>杂货铺</h2>
+        <p>这里是杂货铺的内容。您可以在这里添加各种有趣的小物件、链接或其他内容。</p>
+        <!-- 可以根据需要添加更多内容 -->
+    </div>
+
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('感谢您的留言！我会尽快回复。');
+            this.reset();
+        });
+
+        document.querySelectorAll('#skills li').forEach(skill => {
+            skill.addEventListener('click', function() {
+                this.style.backgroundColor = this.style.backgroundColor === 'rgb(46, 204, 113)' 
+                    ? '#3498db' : '#2ecc71';
+            });
+        });
+
+        document.querySelectorAll('.project').forEach(project => {
+            project.addEventListener('click', function() {
+                this.style.backgroundColor = this.style.backgroundColor === 'rgb(236, 240, 241)' 
+                    ? '#fff' : '#ecf0f1';
+            });
+        });
+
+        // 新增音乐播放器控制脚本
+        const audio = document.querySelector('audio');
+        const musicTitle = document.getElementById('music-title');
+        const musicPlayer = document.getElementById('music-player');
+
+        // 设置默认音量为25%
+        audio.volume = 0.25;
+
+        audio.addEventListener('play', () => {
+            musicTitle.textContent = "正在播放: obj_wo3DlMOGwrbDjj7DisKw";
+        });
+
+        audio.addEventListener('pause', () => {
+            musicTitle.textContent = "暂停播放: obj_wo3DlMOGwrbDjj7DisKw";
+        });
+
+        // 10秒后自动播放音乐
+        setTimeout(() => {
+            audio.play().catch(e => console.log("自动播放失败:", e));
+        }, 10000);
+
+        // 更新图片轮播功能
+        function startImageCarousel() {
+            const images = document.querySelectorAll('#image-carousel img');
+            let currentIndex = 0;
+
+            setInterval(() => {
+                images[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % images.length;
+                images[currentIndex].classList.add('active');
+            }, 5000); // 每5秒切换一次图片
+        }
+
+        // 页面加载完成后启动图片轮播
+        window.addEventListener('load', startImageCarousel);
+
+        // 添加杂货铺链接的点击事件处理
+        document.getElementById('zahuopu-link').addEventListener('click', function(e) {
+            e.preventDefault(); // 阻止默认的链接行为
+            var zahuopuContent = document.getElementById('zahuopu-content');
+            if (zahuopuContent.style.display === 'none') {
+                zahuopuContent.style.display = 'block';
+                // 滚动到杂货铺内容
+                zahuopuContent.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                zahuopuContent.style.display = 'none';
+            }
+        });
+
+        // 项目展示的阅读更多功能
+        document.querySelectorAll('.read-more').forEach(button => {
+            button.addEventListener('click', function() {
+                const summary = this.closest('.project-summary');
+                const full = summary.nextElementSibling;
+                if (summary.classList.contains('expanded')) {
+                    summary.classList.remove('expanded');
+                    full.style.display = 'none';
+                    this.textContent = '阅读更多';
+                } else {
+                    summary.classList.add('expanded');
+                    full.style.display = 'block';
+                    this.textContent = '收起';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
